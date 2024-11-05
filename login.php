@@ -1,20 +1,18 @@
 <?php
-include_once('lconfig.php');
+// include 'lconfig.php';;
+//  include 'verifica_sessao.php';
 
-// Verifica se o formulário foi enviado
+session_start(); 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $nome = $_POST['nome'] ?? '';
     $email = $_POST['email'] ?? '';
     $senha = $_POST['senha'] ?? '';
 
-    // Exibir os dados para depuração
-    echo "Nome: $nome, Email: $email"; // Para verificar se os dados estão sendo recebidos
-
     if ($nome && $email && $senha) {
-        // Prepara a consulta SQL
         $stmt = $conexao->prepare("INSERT INTO registrar (nome, email, senha) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $nome, $email, $senha);
-        
+
         if ($stmt->execute()) {
             echo "Conta criada com sucesso!";
         } else {
@@ -26,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 }
 
-// Puxar estados
 function getUfs() {
     $url = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados';
     $ch = curl_init($url);
@@ -37,7 +34,6 @@ function getUfs() {
     return json_decode($response, true);
 }
 
-// Cidades de acordo com o estado
 function getCidades($uf) {
     $url = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/' . $uf . '/municipios';
     $ch = curl_init($url);
@@ -48,7 +44,6 @@ function getCidades($uf) {
     return json_decode($response, true);
 }
 
-// Função para puxar cidades
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['uf'])) {
     $uf = $_POST['uf'];
     $cidades = getCidades($uf);
@@ -64,137 +59,9 @@ $ufs = getUfs();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Página Inicial</title>
-    <script>
-        async function carregarCidades() {
-            const ufSelect = document.getElementById('uf');
-            const uf = ufSelect.value;
 
-            const response = await fetch('', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    uf: uf
-                })
-            });
-
-            const cidades = await response.json();
-            const cidadeSelect = document.getElementById('cidade');
-            cidadeSelect.innerHTML = '';
-
-            cidades.forEach(function(cidade) {
-                const option = document.createElement('option');
-                option.value = cidade.nome;
-                option.textContent = cidade.nome;
-                cidadeSelect.appendChild(option);
-            });
-        }
-
-        function toggleForms() {
-            const signInForm = document.querySelector('.login');
-            const registerForm = document.querySelector('.register');
-            const isSignIn = document.getElementById('SignIn').checked;
-
-            signInForm.style.display = isSignIn ? 'block' : 'none';
-            registerForm.style.display = isSignIn ? 'none' : 'block';
-        }
-
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(String(email).toLowerCase());
-        }
-
-        function validateAge(dateOfBirth) {
-            const today = new Date();
-            const birthDate = new Date(dateOfBirth);
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            return age >= 18;
-        }
-
-        function validateLogin() {
-            const email = document.getElementById('emailLogin').value;
-            const password = document.getElementById('passwordLogin').value;
-
-            if (!validateEmail(email)) {
-                alert('Por favor, insira um e-mail válido.');
-                return;
-            }
-
-            if (password.length < 8) {
-                alert('A senha deve ter pelo menos 8 caracteres.');
-                return;
-            }
-
-            if (email && password) {
-                window.location.href = ''; // Adicione a URL de redirecionamento aqui
-            } else {
-                alert('Por favor, preencha todos os campos.');
-            }
-        }
-
-        function validateRegister() {
-            const name = document.getElementById('name').value;
-            const date = document.getElementById('date').value;
-            const email = document.getElementById('emailRegister').value;
-            const telephone = document.getElementById('telephone').value;
-            const whatsapp = document.getElementById('whatsapp').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const uf = document.getElementById('uf').value;
-            const cidade = document.getElementById('cidade').value;
-
-            if (!validateEmail(email)) {
-                alert('Por favor, insira um e-mail válido.');
-                return;
-            }
-
-            if (!validateAge(date)) {
-                alert('Você deve ter 18 anos ou mais para se registrar.');
-                return;
-            }
-
-            if (password.length < 8) {
-                alert('A senha deve ter pelo menos 8 caracteres.');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                alert('As senhas não coincidem. Por favor, tente novamente.');
-                return;
-            }
-
-            if (name && date && email && telephone && whatsapp && password && confirmPassword && uf && cidade) {
-                window.location.href = ''; // Adicione a URL de redirecionamento aqui
-            } else {
-                alert('Por favor, preencha todos os campos.');
-            }
-        }
-
-        function formatPhone(input) {
-            input.value = input.value
-                .replace(/\D/g, '') // Remove caracteres não numéricos
-                .replace(/^(\d{2})(\d)/, '($1) $2') // Formata código de área
-                .replace(/(\d)(\d{4})$/, '$1 $2') // Formata parte do número
-                .replace(/(\d{5})(\d)/, '$1-$2'); // Formata parte final do número
-        }
-
-        window.onload = function() {
-            toggleForms(); // Chama a função ao carregar a página
-
-            // Define a data máxima de nascimento
-            const today = new Date();
-            const maxDate = new Date(today.setFullYear(today.getFullYear() - 18));
-            const dateInput = document.getElementById('date');
-            dateInput.max = maxDate.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-        };
-    </script>
     <link rel="stylesheet" href="login.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -277,3 +144,141 @@ $ufs = getUfs();
     </form>
 </body>
 </html>
+
+<script>
+    async function carregarCidades() {
+        const uf = $('#uf').val();
+
+        const response = await fetch('', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ uf: uf })
+        });
+
+        const cidades = await response.json();
+        const cidadeSelect = $('#cidade');
+        cidadeSelect.empty();
+
+        cidades.forEach(function(cidade) {
+            const option = $('<option></option>').val(cidade.nome).text(cidade.nome);
+            cidadeSelect.append(option);
+        });
+    }
+
+    function toggleForms() {
+        const isSignIn = $('#SignIn').is(':checked');
+        $('.login').toggle(isSignIn);
+        $('.register').toggle(!isSignIn);
+    }
+
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    }
+
+    function validateAge(dateOfBirth) {
+        const today = new Date();
+        const birthDate = new Date(dateOfBirth);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age >= 18;
+    }
+
+    function validateLogin() {
+        const email = $('#emailLogin').val();
+        const password = $('#passwordLogin').val();
+
+        if (!validateEmail(email)) {
+            alert('Por favor, insira um e-mail válido.');
+            return;
+        }
+
+        if (password.length < 8) {
+            alert('A senha deve ter pelo menos 8 caracteres.');
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: 'api.php',
+            data: { email: email, password: password },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert(response.message);
+                    window.location.href = 'abertura.php'; 
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText); 
+                alert('Erro ao processar a requisição: ' + error);
+            }
+        });
+    }
+
+
+
+    function validateRegister() {
+        const name = $('#name').val();
+        const date = $('#date').val();
+        const email = $('#emailRegister').val();
+        const telephone = $('#telephone').val();
+        const whatsapp = $('#whatsapp').val();
+        const password = $('#password').val();
+        const confirmPassword = $('#confirmPassword').val();
+        const uf = $('#uf').val();
+        const cidade = $('#cidade').val();
+
+        if (!validateEmail(email)) {
+            alert('Por favor, insira um e-mail válido.');
+            return;
+        }
+
+        if (!validateAge(date)) {
+            alert('Você deve ter 18 anos ou mais para se registrar.');
+            return;
+        }
+
+        if (password.length < 8) {
+            alert('A senha deve ter pelo menos 8 caracteres.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert('As senhas não coincidem. Por favor, tente novamente.');
+            return;
+        }
+
+        if (name && date && email && telephone && whatsapp && password && confirmPassword && uf && cidade) {
+            window.location.href = '';
+        } else {
+            alert('Por favor, preencha todos os campos.');
+        }
+    }
+
+    function formatPhone(input) {
+        const val = input.value.replace(/\D/g, '')
+            .replace(/^(\d{2})(\d)/, '($1) $2')
+            .replace(/(\d)(\d{4})$/, '$1 $2')
+            .replace(/(\d{5})(\d)/, '$1-$2');
+        $(input).val(val);
+    }
+
+    $(document).ready(function() {
+        toggleForms();
+
+        const today = new Date();
+        const maxDate = new Date(today.setFullYear(today.getFullYear() - 18));
+        $('#date').attr('max', maxDate.toISOString().split('T')[0]);
+    });
+
+    
+</script>
