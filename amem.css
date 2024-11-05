@@ -1,0 +1,206 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f9fc;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    border: 1px solid #e0e0e0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 26px;
+    font-weight: 600;
+    border-bottom: 3px solid #28a745;
+    padding-bottom: 15px;
+}
+
+.label-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+label {
+    font-weight: 500;
+    color: #555;
+}
+
+input[type="text"],
+input[type="tel"],
+textarea,
+select {
+    width: calc(100% - 20px);
+    padding: 12px;
+    border: 2px solid #ced4da;
+    border-radius: 6px;
+    transition: border 0.3s, box-shadow 0.3s;
+    font-size: 16px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+}
+
+textarea {
+    height: 160px; /* Altura fixa aumentada */
+    resize: none; /* Impede que o usuário redimensione o campo */
+}
+
+button,
+.small-button {
+    width: 200px; /* Definir uma largura fixa para os botões */
+    padding: 12px 15px; /* Ajustar o padding para um tamanho confortável */
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    margin: 15px auto; /* Centralizar com margem automática */
+    display: block; /* Fazer os botões serem blocos para centralização */
+    font-size: 16px;
+}
+
+button:hover,
+.small-button:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.image-preview img {
+    max-width: 120px;
+    margin: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.popup-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 25px;
+    border: 1px solid #888;
+    width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.close:hover {
+    color: #000;
+    cursor: pointer;
+}
+
+.popup h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+.popup label {
+    margin-top: 10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.img-container {
+    position: relative;
+    display: inline-block;
+    margin: 5px;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.img-container:hover .remove-btn {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.img-container img {
+    max-width: 160px;
+    max-height: 160px;
+    border-radius: 8px;
+    transition: transform 0.3s;
+}
+
+.img-container:hover img {
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .label-container {
+        flex-direction: column;
+    }
+
+    .label-container > div {
+        margin-bottom: 15px;
+    }
+
+    .popup-content {
+        width: 90%;
+    }
+
+    button,
+    .small-button {
+        width: 100%; /* Botões ocupam 100% da largura em telas pequenas */
+    }
+}
