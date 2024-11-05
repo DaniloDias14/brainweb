@@ -1,3 +1,5 @@
+
+<!-- <?php include 'verifica_sessao.php';?> -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -30,7 +32,6 @@
                         <option value="usuario1">Usuário 1</option>
                         <option value="usuario2">Usuário 2</option>
                         <option value="usuario3">Usuário 3</option>
-                        <!-- Adicione mais opções conforme necessário -->
                     </select>
                 </div>
                 <div>
@@ -93,10 +94,10 @@
 
             if (!telefoneRegex.test(telefone)) {
                 alert("Por favor, preencha o telefone no formato (00) 00000-0000.");
-                event.preventDefault(); // Impede o envio do formulário
+                event.preventDefault(); 
                 return;
             }
-            
+
             alert("Chamado enviado!");
         };
 
@@ -105,7 +106,6 @@
             const novoNome = document.getElementById("novoNome").value;
             const novoTelefone = document.getElementById("novoTelefone").value;
 
-            // Verifica se todos os campos estão preenchidos
             if (!novoSetor || !novoNome || !novoTelefone) {
                 alert("Por favor, preencha todos os campos.");
                 return;
@@ -122,15 +122,12 @@
         }
 
         function formatPhone(input) {
-            // Remove todos os caracteres que não são dígitos
             let value = input.value.replace(/\D/g, '');
 
-            // Verifica se o valor tem o tamanho correto
             if (value.length > 11) {
                 value = value.slice(0, 11);
             }
 
-            // Formata o telefone no formato (00) 00000-0000
             if (value.length > 6) {
                 input.value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7, 11)}`;
             } else if (value.length > 2) {
@@ -146,7 +143,6 @@
             const imagePreview = document.getElementById("imagePreview");
             const files = Array.from(event.target.files);
 
-            // Para cada arquivo selecionado, criar uma nova visualização
             files.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function (e) {
@@ -161,12 +157,12 @@
                     removeBtn.innerHTML = "&times;";
                     removeBtn.className = "remove-btn";
                     removeBtn.onclick = function () {
-                        imgContainer.remove(); // Remove a imagem específica ao clicar no "X"
+                        imgContainer.remove();
                     };
 
                     imgContainer.appendChild(img);
                     imgContainer.appendChild(removeBtn);
-                    imagePreview.appendChild(imgContainer); // Adiciona a nova imagem à área de visualização
+                    imagePreview.appendChild(imgContainer);
                 };
                 reader.readAsDataURL(file);
             });
