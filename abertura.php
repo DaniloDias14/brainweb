@@ -7,16 +7,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abertura de Chamados - TI</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="amem.css">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <div class="container">
         <h1>Abertura de Chamados</h1>
         <form id="chamadoForm">
-            <div class="label-container">
-                <div>
+            <div class="label-container d-flex row">
+                <div class="col-md-4">
                     <label for="setor">Setor</label>
                     <select id="setor" required>
                         <option value="">--Selecione um setor--</option>
@@ -25,7 +27,7 @@
                         <option value="desenvolvimento">Desenvolvimento</option>
                     </select>
                 </div>
-                <div>
+                <div class="col-md-4">
                     <label for="nome">Nome</label>
                     <select id="nome" required>
                         <option value="">--Selecione um nome--</option>
@@ -34,23 +36,27 @@
                         <option value="usuario3">Usuário 3</option>
                     </select>
                 </div>
-                <div>
+                <div class="col-md-4">
                     <label for="telefone">Telefone</label>
                     <input type="tel" id="telefone" required oninput="formatPhone(this)">
                 </div>
             </div>
             <div class="button-container">
-                <button type="button" onclick="openPopup()" class="small-button">Novo Usuário</button>
+                <button type="button" onclick="openPopup()" class="btn btn-outline-success">Novo Usuário</button>
             </div>
 
-            <label for="descricao">Descrição do Problema</label>
-            <textarea id="descricao" required></textarea>
-
-            <label for="anexo">Anexar Fotos</label>
-            <input type="file" id="anexo" accept="image/*" multiple>
-            <div id="imagePreview" class="image-preview"></div>
-
-            <button type="submit" class="small-button">Enviar Chamado</button>
+            <div class="d-flex row p-3">
+                <label for="descricao">Descrição do Problema</label>
+                <textarea id="descricao" required></textarea>
+    
+                <label for="anexo">Anexar arquivos</label>
+                <input id="anexo" class="form-control" type="file" id="formFile" accept="image/*">
+                <!-- <input type="file" id="anexo" accept="image/*" multiple> -->
+                <!-- <div id="imagePreview" class="image-preview"></div> -->
+            </div><br>
+            <div class="p-1">
+                <center><button type="submit" id="enviaChamado" class="btn btn-outline-success">Enviar Chamado</button></center>
+            </div>
         </form>
     </div>
 
@@ -74,11 +80,12 @@
                     <label for="novoTelefone">Telefone</label>
                     <input type="tel" id="novoTelefone" required oninput="formatPhone(this)">
                 </fieldset>
-                <button type="button" onclick="registerUser()" class="small-button">Cadastrar Novo Usuário</button>
+                <button type="button" onclick="registerUser()" class="btn btn-outline-success">Cadastrar Novo Usuário</button>
             </form>
         </div>
     </div>
-
+    <script src="script.js">
+    </script>
     <script>
         function openPopup() {
             document.getElementById("popup").style.display = "block";
@@ -88,17 +95,29 @@
             document.getElementById("popup").style.display = "none";
         }
 
-        document.getElementById("chamadoForm").onsubmit = function (event) {
+        document.getElementById("chamadoForm").onsubmit = async function (event) {
             const telefone = document.getElementById("telefone").value;
             const telefoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
+            event.preventDefault();
 
             if (!telefoneRegex.test(telefone)) {
                 alert("Por favor, preencha o telefone no formato (00) 00000-0000.");
-                event.preventDefault(); 
                 return;
             }
 
-            alert("Chamado enviado!");
+            let resultadoAjax = await ajax(
+                metod = 'POST',
+                url = 'InsereChamado.php',
+                data = {
+                    descricao: $('#descricao').val(),
+                    img: btoa($('#anexo').val())
+                }
+            );
+
+            alert(resultadoAjax['message']);
+            window.location.href = 'chamado.php';
+
+            // alert("Chamado enviado!");
         };
 
         function registerUser() {

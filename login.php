@@ -66,10 +66,14 @@ $ufs = getUfs();
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <form id="authForm" class="wrapper" action="login.php" method="POST">
+
+    <center><h1 class="pt-5">Bem vindo ao sistema de abertura de chamados</h1></center>
+    <form id="authForm" class="wrapper pt-5" action="login.php" method="POST">
         <div class="InUp">
             <input id="SignIn" type="radio" name="tab" checked onclick="toggleForms()">
             <label for="SignIn">Conecte-se</label>
@@ -80,14 +84,27 @@ $ufs = getUfs();
 
         <div class="login">
             <div>
-                <img width="25" src="image/login.png" alt="">
-                <input id="emailLogin" type="email" name="emailLogin" placeholder="E-mail" required>
+                <span class="mx-5"><b>Login</b></span>
+                <div class="d-flex col">
+                    <img style="max-width: 50px !important; max-height: 50px !important;" src="image/login.png" alt="" class="p-2">
+                    <input id="emailLogin" type="email" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <!-- <input id="emailLogin" type="email" name="emailLogin" placeholder="E-mail" required> -->
             </div>
+
             <div>
-                <img width="25" src="image/padlock.png" alt="">
-                <input id="passwordLogin" type="password" name="passwordLogin" placeholder="Senha" required minlength="8">
-                <img width="25" src="image/password.png" alt="">
-                <button type="button" onclick="validateLogin()">Entrar</button>
+                <span class="mx-5"><b>Senha</b></span><br>
+                <div class="d-flex col">
+                    <img  style="max-width: 50px !important; max-height: 50px !important;" src="image/padlock.png" alt="" class="p-2">
+                    <input id="passwordLogin" type="password" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+
+                </div>
+                <!-- <input id="passwordLogin" type="password" name="passwordLogin" placeholder="Senha" required minlength="8"> -->
+                <!-- <img width="25" src="image/password.png" alt=""> -->
+            </div>
+
+            <div>
+                <button type="button" class="btn btn-outline-success" onclick="validateLogin()">Entrar</button>
             </div>
         </div>
 
@@ -138,7 +155,7 @@ $ufs = getUfs();
                 </select>
             </section>
             <div>
-                <button type="submit" name="submit">Criar conta</button>
+                <button class="btn btn-outline-success" type="submit" name="submit">Criar conta</button>
             </div>
         </div>
     </form>
