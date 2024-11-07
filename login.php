@@ -220,7 +220,7 @@ $ufs = getUfs();
             alert('A senha deve ter pelo menos 8 caracteres.');
             return;
         }
-
+ 
         $.ajax({
             type: 'POST',
             url: 'api.php',
