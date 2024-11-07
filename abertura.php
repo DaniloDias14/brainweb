@@ -106,9 +106,9 @@
             }
 
             let resultadoAjax = await ajax(
-                metod = 'POST',
-                url = 'InsereChamado.php',
-                data = {
+                'POST',
+                'insereChamado.php',
+                {
                     descricao: $('#descricao').val(),
                     img: btoa($('#anexo').val())
                 }

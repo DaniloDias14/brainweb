@@ -45,3 +45,16 @@
     </div>
 </body>
 </html>
+
+<script>
+    (async ()=>{
+        let resultAjax = await ajax(
+            'POST',
+            'insereChamado.php',
+            {}
+        );
+
+        //TODO: resultAjax e inserir nas divs respectivas;
+    })();
+
+</script>
